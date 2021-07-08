@@ -82,14 +82,17 @@ func (c *Client) start(initPayload interface{}, query string) {
 		}
 
 		objs := map[string]interface{}{}
-		if err := json.Unmarshal([]byte(data), &objs); err != nil {
-			if t := objs["type"]; t == "connection_ack" {
+		if err := json.Unmarshal([]byte(data), &objs); err == nil {
+			switch t := objs["type"]; t {
+			case "connection_ack":
 				c.subscribe(query)
-			} else {
-				c.log(fmt.Sprintln("Empty or unknown type: ", t))
+			case "next":
+				c.log(fmt.Sprintf("Got message: %v", objs["payload"]))
+			default:
+				c.log(fmt.Sprint("Empty or unknown type: ", t))
 			}
 		} else {
-			c.log(fmt.Sprintf("Got error: %s", err))
+			c.log(fmt.Sprintf("Got error: %v", err))
 		}
 	}))
 
