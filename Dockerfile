@@ -1,7 +1,8 @@
 FROM golang:1.16.5-alpine3.14 as builder
-WORKDIR $GOPATH/src/go.k6.io/k6
+WORKDIR $GOPATH/src/xk6-graphql
+ADD . .
 RUN go install github.com/k6io/xk6/cmd/xk6@latest
-RUN /go/bin/xk6 build v0.33.0 --output /go/bin/k6 --with github.com/BratSinot/xk6-graphql
+RUN /go/bin/xk6 build v0.33.0 --output /go/bin/k6 --with github.com/BratSinot/xk6-graphql=$GOPATH/src/xk6-graphql
 
 FROM alpine:3.14
 RUN apk add --no-cache ca-certificates && \
