@@ -25,7 +25,7 @@ type Client struct {
 	logEnabled bool
 }
 
-func (c *GraphQL) XStart(ctx *context.Context, url string, initPayload interface{}, query string, logEnabled bool) (*ws.WSHTTPResponse, error) {
+func (c *GraphQL) XStart(ctx *context.Context, protocol string, url string, initPayload interface{}, query string, logEnabled bool) (*ws.WSHTTPResponse, error) {
 	rt := common.GetRuntime(*ctx)
 
 	return ws.
@@ -37,7 +37,7 @@ func (c *GraphQL) XStart(ctx *context.Context, url string, initPayload interface
 				Headers map[string]string `json:"headers"`
 			}{
 				Headers: map[string]string{
-					"sec-websocket-protocol": "graphql-transport-ws",
+					"sec-websocket-protocol": protocol,
 				},
 			}),
 			rt.ToValue(
